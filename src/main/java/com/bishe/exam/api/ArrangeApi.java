@@ -47,6 +47,7 @@ public class ArrangeApi {
             e.printStackTrace();
             return false;
         }
+        settingService.save(new Setting(arrangeType.toString(), new Date()));
         return true;
     }
 }
