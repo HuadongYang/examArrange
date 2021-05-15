@@ -6,10 +6,7 @@ import com.bishe.exam.domain.Classroom;
 import com.bishe.exam.domain.Exam;
 import com.bishe.exam.domain.Student;
 import com.bishe.exam.domain.Teacher;
-import com.bishe.exam.service.ClassroomService;
-import com.bishe.exam.service.ExamService;
-import com.bishe.exam.service.StudentService;
-import com.bishe.exam.service.TeacherService;
+import com.bishe.exam.service.*;
 import com.bishe.exam.utils.DataListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +27,8 @@ public class DataImportApi {
     private ExamService examService;
     @Autowired
     private TeacherService teacherService;
+    @Autowired
+    private UserService userService;
 
 
     @PostMapping("/classroom")
@@ -46,6 +45,7 @@ public class DataImportApi {
         DataListener<Student> dataListener = new DataListener();
         EasyExcel.read(file.getInputStream(), Student.class, dataListener).sheet().doRead();
         studentService.save(dataListener.getList());
+        userService.saveStudentAccount(dataListener.getList());
 
         DataListener<Exam> dataExamListener = new DataListener();
         EasyExcel.read(file.getInputStream(), Exam.class, dataExamListener).sheet(2).doRead();

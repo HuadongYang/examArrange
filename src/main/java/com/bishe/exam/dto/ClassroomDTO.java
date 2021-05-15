@@ -15,4 +15,20 @@ public class ClassroomDTO extends Classroom {
         this.teacher = teacher;
         this.studentDTOs = studentDTOs;
     }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
+    public List<StudentDTO> getStudentDTOs() {
+        return studentDTOs;
+    }
+
+    public void setStudentDTOs(List<StudentDTO> studentDTOs) {
+        this.studentDTOs = studentDTOs;
+    }
 }

@@ -21,7 +21,7 @@ public class GeneratorCodeConfig {
         // 生成文件的输出目录
         String outputDir = "F:\\TempData";
         // 需要包含的表名（与exclude二选一配置）
-        String[] include = {"relation"};
+        String[] include = {"setting"};
         // 父包名
         String parent = "com.bishe.exam";
 

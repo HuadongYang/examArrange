@@ -8,6 +8,8 @@ public class ExamDTO extends Exam {
 
     private List<ClassroomDTO> classrooms;
 
+    public ExamDTO() {
+    }
 
     public ExamDTO(Exam exam, List<ClassroomDTO> classrooms) {
         super(exam);

@@ -18,4 +18,6 @@ public interface TeacherService extends IService<Teacher> {
 
     void save(List<Teacher> teachers);
 
+    List<Integer> getTeacherWithFreeTime(String exceptMajor, Integer limit);
+
 }

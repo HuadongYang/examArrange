@@ -23,15 +23,20 @@ public class Relation implements Serializable {
     @TableField("examId")
     private Integer examId;
 
-    @TableField("studentId")
-    private String studentId;
-
     @TableField("teacherId")
     private Integer teacherId;
 
     @TableField("classroomId")
     private Integer classroomId;
 
+    public Relation() {
+    }
+
+    public Relation(Integer examId, Integer teacherId, Integer classroomId) {
+        this.examId = examId;
+        this.teacherId = teacherId;
+        this.classroomId = classroomId;
+    }
 
     public Integer getId() {
         return id;
@@ -49,13 +54,6 @@ public class Relation implements Serializable {
         this.examId = examId;
     }
 
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
 
     public Integer getTeacherId() {
         return teacherId;
@@ -78,7 +76,6 @@ public class Relation implements Serializable {
         return "Relation{" +
         "id=" + id +
         ", examId=" + examId +
-        ", studentId=" + studentId +
         ", teacherId=" + teacherId +
         ", classroomId=" + classroomId +
         "}";

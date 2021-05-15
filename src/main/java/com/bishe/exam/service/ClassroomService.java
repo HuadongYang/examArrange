@@ -2,7 +2,9 @@ package com.bishe.exam.service;
 
 import com.bishe.exam.domain.Classroom;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.bishe.exam.domain.Exam;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,4 +18,6 @@ import java.util.List;
 public interface ClassroomService extends IService<Classroom> {
 
     void save(List<Classroom> classrooms);
+
+    List<Classroom> getUnusedRooms(Date start, Date end);
 }

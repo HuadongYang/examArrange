@@ -3,6 +3,7 @@ package com.bishe.exam.service;
 import com.bishe.exam.domain.Classroom;
 import com.bishe.exam.domain.Exam;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.bishe.exam.dto.ExamInfoDTO;
 
 import java.util.List;
 
@@ -17,5 +18,7 @@ import java.util.List;
 public interface ExamService extends IService<Exam> {
 
     void save(List<Exam> exams);
+
+    List<ExamInfoDTO> getExamInfo();
 
 }
