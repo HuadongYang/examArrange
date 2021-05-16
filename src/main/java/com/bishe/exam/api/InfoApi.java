@@ -35,6 +35,8 @@ public class InfoApi {
     private ClassroomService classroomService;
     @Autowired
     private TeacherService teacherService;
+    @Autowired
+    private SettingService settingService;
 
     @GetMapping("/examAndClasses")
     public Map getExamsAndClasses() {
@@ -104,49 +106,27 @@ public class InfoApi {
             x.setClassroomName(classroom.getName());
         });
 
-        studentDTOS = studentDTOS.stream().sorted(Comparator.comparing(Student::getClassNum)).collect(Collectors.toList());
-        return studentDTOS;
-//
-//        List<Relation> relations = relationService.list(new QueryWrapper<Relation>().eq("examId", examId));
-//        List<Integer> relationIds = relations.stream().map(Relation::getId).collect(Collectors.toList());
-//
-//        Collection<Student> students = studentService.list(new QueryWrapper<Student>().eq("classNum", classNum));
-//        List<String> studentIds = students.stream().map(Student::getId).collect(Collectors.toList());
-//
-//        List<RelationStudent> relationStudents = relationStudentService.list(
-//                new QueryWrapper<RelationStudent>().in("relationId", relationIds).in("studentId", studentIds));
-//        Map<Integer, RelationStudent> relationId2Relation = relationStudents.stream().collect(Collectors.toMap(RelationStudent::getRelationId, x -> x, (x1, x2) -> x1));
-//        //反选
-//        relations = relations.stream().filter(x -> relationId2Relation.containsKey(x.getId())).collect(Collectors.toList());
-//
-//        Map<String, RelationStudent> studentId2Relation = relationStudents.stream().collect(Collectors.toMap(RelationStudent::getStudentId, x -> x, (x1, x2) -> x1));
-//        students.stream().filter(x -> studentId2Relation.containsKey(x.getId())).collect(Collectors.toList());
-//
-//        Map<String, Student> studentMap = students.stream().collect(Collectors.toMap(Student::getId, x -> x));
-//
-//
-//        List<Integer> classroomIds = relations.stream().map(Relation::getClassroomId).collect(Collectors.toList());
-//        if (CollectionUtils.isEmpty(classroomIds)) {
-//            return new ExamDTO();
-//        }
-//        Collection<Classroom> classrooms = classroomService.listByIds(classroomIds);
-//        Map<Integer, Classroom> classroomMap = classrooms.stream().collect(Collectors.toMap(Classroom::getId, x -> x));
-//
-//        List<Integer> teacherIds = relations.stream().map(Relation::getTeacherId).collect(Collectors.toList());
-//        Collection<Teacher> teachers = teacherService.listByIds(teacherIds);
-//        Map<Integer, Teacher> teacherMap = teachers.stream().collect(Collectors.toMap(Teacher::getId, x -> x));
-//
-//
-//        List<ClassroomDTO> res = new ArrayList<>();
-//        relations.forEach(relation -> {
-//            Classroom classroom = classroomMap.get(relation.getClassroomId());
-//            Teacher teacher = teacherMap.get(relation.getTeacherId());
-//            List<RelationStudent> rs = relationStudents.stream().filter(x -> x.getRelationId().equals(relation.getId())).collect(Collectors.toList());
-//            List<StudentDTO> studentDTOs = new ArrayList<>();
-//            rs.forEach(s -> studentDTOs.add(new StudentDTO(studentMap.get(s.getStudentId()), s.getOrder(), classroom.getFloorNum() + "--" + classroom.getName())));
-//            res.add(new ClassroomDTO(classroom, teacher, studentDTOs));
-//        });
-//        ExamDTO examDTO = new ExamDTO(exam, res);
-//        return examDTO;
+        List<Setting> settings = settingService.list();
+        ArrangeType arrangeType = SNO;
+        if (!CollectionUtils.isEmpty(settings)) {
+            arrangeType = ArrangeType.getByStr(settings.get(settings.size() - 1).getType());
+        }
+        return sortByGroup(studentDTOS, arrangeType);
+
+    }
+
+    private List<StudentDTO> sortByGroup(List<StudentDTO> students, ArrangeType arrangeType) {
+        Map<String, List<StudentDTO>> classNum2Students = students.stream().collect(Collectors.groupingBy(StudentDTO::getClassNum));
+        List<StudentDTO> res = new ArrayList<>();
+        classNum2Students.forEach((classNum, stds
+        ) -> {
+            if (arrangeType.equals(SNO)) {
+                stds = stds.stream().sorted(Comparator.comparing(StudentDTO::getId)).collect(Collectors.toList());
+            } else if (arrangeType.equals(NAME)) {
+                stds = stds.stream().sorted(Comparator.comparing(StudentDTO::getName)).collect(Collectors.toList());
+            }
+            res.addAll(stds);
+        });
+        return res;
     }
 }
